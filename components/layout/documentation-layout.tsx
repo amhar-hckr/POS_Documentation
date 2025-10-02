@@ -15,7 +15,7 @@ export function DocumentationLayout({ children }: DocumentationLayoutProps) {
             </header>
 
             {/* Main content with padding for fixed header and footer */}
-            <main className="flex-grow pt-20 pb-20 px-2 sm:px-4">
+            <main className="flex-grow py-20 px-2 sm:px-4 mt-6">
                 {children}
             </main>
 
