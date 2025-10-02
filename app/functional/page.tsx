@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+// import { descriptions } from "../data";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/card";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -36,435 +37,60 @@ export default function FunctionalPage() {
 	const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
 	const [clickedHotspotId, setClickedHotspotId] = useState<number | null>(null);
 	const [descriptionContent, setDescriptionContent] = useState<string>("");
+	const [loadingDescription, setLoadingDescription] = useState<boolean>(false);
 	const [showDescription, setShowDescription] = useState<boolean>(false);
 
 	const hotspots: Hotspot[] = [
-		{
-			id: 1,
-			label: "SIGN ON",
-			descriptionFile: "/description/son.md",
-			image: "",
-			left: "81.4%",
-			top: "3.6%",
-
-		},
-		{
-			id: 2,
-			label: "MENU",
-			descriptionFile: "/description/menu.md",
-			image: "",
-			left: "86.6%",
-			top: "3.6%",
-		},
-		{
-			id: 3,
-			label: "EDC",
-			descriptionFile: "/description/edc.md",
-			image: "",
-			left: "91.8%",
-			top: "3.6%",
-		},
-		{
-			id: 4,
-			label: "SEEK",
-			descriptionFile: "/description/seek.md",
-			image: "",
-			left: "96.9%",
-			top: "3.6%",
-		},
-		{
-			id: 5,
-			label: "BILL SEEK",
-			descriptionFile: "/description/bill_seek.md",
-			image: "",
-			left: "81.4%",
-			top: "10.6%",
-		},
-		{
-			id: 6,
-			label: "CANSEL",
-			descriptionFile: "/description/cansel.md",
-			image: "",
-			left: "86.5%",
-			top: "10.6%",
-		},
-		{
-			id: 7,
-			label: "RECALL",
-			descriptionFile: "/description/recall.md",
-			image: "",
-			left: "91.8%",
-			top: "10.4%",
-		},
-		{
-			id: 8,
-			label: "SUSPEND",
-			descriptionFile: "/description/suspend.md",
-			image: "",
-			left: "96.8%",
-			top: "10.4%",
-		},
-		{
-			id: 9,
-			label: "SAVE",
-			descriptionFile: "/description/save.md",
-			image: "",
-			left: "81.5%",
-			top: "17.3%",
-		},
-		{
-			id: 10,
-			label: "VOID",
-			descriptionFile: "/description/void.md",
-			image: "",
-			left: "86.6%",
-			top: "17.3%",
-		},
-		{
-			id: 11,
-			label: "REFUND",
-			descriptionFile: "/description/refund.md",
-			image: "",
-			left: "91.8%",
-			top: "17.3%",
-		},
-		{
-			id: 12,
-			label: "MONEY",
-			descriptionFile: "/description/money.md",
-			image: "",
-			left: "96.9%",
-			top: "17.3%",
-		},
-		{
-			id: 13,
-			label: "RELOAD",
-			descriptionFile: "/description/reload.md",
-			image: "",
-			left: "81.4%",
-			top: "24.3%",
-		},
-		{
-			id: 14,
-			label: "PAID OUT",
-			descriptionFile: "/description/paid_out.md",
-			image: "",
-			left: "86.6%",
-			top: "24.3%",
-		},
-		{
-			id: 15,
-			label: "PROMO",
-			descriptionFile: "/description/promo.md",
-			image: "",
-			left: "91.7%",
-			top: "24.3%",
-		},
-		{
-			id: 16,
-			label: "CHANGE PHONE",
-			descriptionFile: "/description/change_phone.md",
-			image: "",
-			left: "96.8%",
-			top: "24.3%",
-		},
-		{
-			id: 17,
-			label: "DISCOUNT LEVEL",
-			descriptionFile: "/description/discount_level.md",
-			image: "",
-			left: "81.3%",
-			top: "31.4%",
-		},
-		{
-			id: 18,
-			label: "DISCOUNT PERSENTAGE",
-			descriptionFile: "/description/discount_persentage.md",
-			image: "",
-			left: "86.6%",
-			top: "31.4%",
-		},
-		{
-			id: 19,
-			label: "DISCOUNT AMOUNT",
-			descriptionFile: "/description/discount_amount.md",
-			image: "",
-			left: "91.7%",
-			top: "31.3%",
-		},
-		{
-			id: 20,
-			label: "DISCOUNT REMOVE",
-			descriptionFile: "/description/discount_remove.md",
-			image: "",
-			left: "96.8%",
-			top: "31.4%",
-		},
-		{
-			id: 21,
-			label: "COPY",
-			descriptionFile: "/description/copy.md",
-			image: "",
-			left: "81.4%",
-			top: "38.2%",
-		},
-		{
-			id: 22,
-			label: "LAYER",
-			descriptionFile: "/description/layer.md",
-			image: "",
-			left: "86.6%",
-			top: "38.2%",
-		},
-
-		{
-			id: 23,
-			label: "SALES MAN",
-			descriptionFile: "/description/sales_man.md",
-			image: "",
-			left: "96.8%",
-			top: "38.1%",
-		},
-		{
-			id: 24,
-			label: "GIFT VOUCHAR SALE",
-			descriptionFile: "/description/gv_sale.md",
-			image: "",
-			left: "91.7%",
-			top: "38.3%",
-		},
-		{
-			id: 25,
-			label: "NEW LOYALTY",
-			descriptionFile: "/description/new_loyalty.md",
-			image: "",
-			left: "81.4%",
-			top: "45%",
-		},
-		{
-			id: 26,
-			label: "STAFF",
-			descriptionFile: "/description/staff.md",
-			image: "",
-			left: "86.6%",
-			top: "45.1%",
-		},
-		{
-			id: 27,
-			label: "RECIVER ACCOUNT",
-			descriptionFile: "/description/recive_acc.md",
-			image: "",
-			left: "91.7%",
-			top: "45.1%",
-		},
-		{
-			id: 28,
-			label: "MANUAL CARD PAYMENT",
-			descriptionFile: "/description/manual_card_payment.md",
-			image: "",
-			left: "96.9%",
-			top: "45.1%",
-		},
-		{
-			id: 29,
-			label: "PLU",
-			descriptionFile: "/description/plu.md",
-			image: "",
-			left: "82.2%",
-			top: "95.4%",
-			variant: "adjust",
-		},
-		{
-			id: 30,
-			label: "RPLU",
-			descriptionFile: "/description/rplu.md",
-			image: "",
-			left: "89.2%",
-			top: "95.4%",
-			variant: "adjust",
-		},
-		{
-			id: 31,
-			label: "CASH",
-			descriptionFile: "/description/cash.md",
-			image: "",
-			left: "96.2%",
-			top: "95.3%",
-			variant: "adjust",
-		},
-		{
-			id: 32,
-			label: "CLEAR",
-			descriptionFile: "/description/clear.md",
-			image: "",
-			left: "89.2%",
-			top: "87%",
-			variant: "adjust",
-		},
-		{
-			id: 33,
-			label: "SUB TOTAL",
-			descriptionFile: "/description/sub_total.md",
-			image: "",
-			left: "96.2%",
-			top: "87%",
-			variant: "adjust",
-		},
-		{
-			id: 34,
-			label: "Loyalty",
-			descriptionFile: "/description/loyalty.md",
-			image: "",
-			left: "67.3%",
-			top: "62.3%",
-			variant: "rectangle",
-		},
-		{
-			id: 35,
-			label: "Outlet",
-			descriptionFile: "/description/outlet.md",
-			image: "",
-			left: "74.3%",
-			top: "62.3%",
-			variant: "rectangle",
-		},
-		{
-			id: 36,
-			label: "Customer Keypad",
-			descriptionFile: "/description/customer_keypad.md",
-			image: "",
-			left: "39.6%",
-			top: "72%",
-			variant: "circle",
-		},
-		{
-			id: 37,
-			label: "Change side",
-			descriptionFile: "/description/change_side.md",
-			image: "",
-			left: "46%",
-			top: "72%",
-			variant: "circle",
-		},
-		{
-			id: 38,
-			label: "Refresh ERP",
-			descriptionFile: "/description/refresh_system.md",
-			image: "",
-			left: "52.4%",
-			top: "72%",
-			variant: "circle",
-		},
-		{
-			id: 39,
-			label: "MASTER",
-			descriptionFile: "/description/master.md",
-			image: "",
-			left: "56.6%",
-			top: "80.6%",
-			variant: "rounded",
-		},
-		{
-			id: 40,
-			label: "AMEX",
-			descriptionFile: "/description/amex.md",
-			image: "",
-			left: "63%",
-			top: "80.6%",
-			variant: "rounded",
-		},
-		{
-			id: 41,
-			label: "VISA",
-			descriptionFile: "/description/visa.md",
-			image: "",
-			left: "69.1%",
-			top: "80.6%",
-			variant: "rounded",
-		},
-		{
-			id: 42,
-			label: "DEBIT",
-			descriptionFile: "/description/debit.md",
-			image: "",
-			left: "75.4%",
-			top: "80.6%",
-			variant: "rounded",
-		},
-		{
-			id: 43,
-			label: "GV REDEEM",
-			descriptionFile: "/description/gv_redeem.md",
-			image: "",
-			left: "56.6%",
-			top: "87.6%",
-			variant: "rounded",
-		},
-		{
-			id: 44,
-			label: "STAFF CREDIT",
-			descriptionFile: "/description/staff_credit.md",
-			image: "",
-			left: "63%",
-			top: "87.6%",
-			variant: "rounded",
-		},
-		{
-			id: 45,
-			label: "REDEEM",
-			descriptionFile: "/description/redeem.md",
-			image: "",
-			left: "69.2%",
-			top: "87.6%",
-			variant: "rounded",
-		},
-		{
-			id: 46,
-			label: "OGF MANUAL",
-			descriptionFile: "/description/ogf_manual.md",
-			image: "",
-			left: "75.5%",
-			top: "87.6%",
-			variant: "rounded",
-		},
-		{
-			id: 47,
-			label: "MINT PAY",
-			descriptionFile: "/description/mint_pay.md",
-			image: "",
-			left: "56.7%",
-			top: "94.7%",
-			variant: "rounded",
-		},
-		{
-			id: 48,
-			label: "THYAGA",
-			descriptionFile: "/description/thyaga.md",
-			image: "",
-			left: "63%",
-			top: "94.6%",
-			variant: "rounded",
-		},
-		{
-			id: 49,
-			label: "KOKO",
-			descriptionFile: "/description/koko.md",
-			image: "",
-			left: "69.2%",
-			top: "94.6%",
-			variant: "rounded",
-		},
-		{
-			id: 50,
-			label: "GV MANUEL",
-			descriptionFile: "/description/gv_manuel.md",
-			image: "",
-			left: "75.5%",
-			top: "94.6%",
-			variant: "rounded",
-		},
-
-
+		{ id: 1, label: "SIGN ON", descriptionFile: "son.tsx", image: "", left: "81.4%", top: "3.6%" },
+		{ id: 2, label: "MENU", descriptionFile: "menu.tsx", image: "", left: "86.6%", top: "3.6%" },
+		{ id: 3, label: "EDC", descriptionFile: "edc.tsx", image: "", left: "91.8%", top: "3.6%" },
+		{ id: 4, label: "SEEK", descriptionFile: "seek.tsx", image: "", left: "96.9%", top: "3.6%" },
+		{ id: 5, label: "BILL SEEK", descriptionFile: "bill_seek.tsx", image: "", left: "81.4%", top: "10.6%" },
+		{ id: 6, label: "CANCEL", descriptionFile: "cansel.tsx", image: "", left: "86.5%", top: "10.6%" },
+		{ id: 7, label: "RECALL", descriptionFile: "recall.tsx", image: "", left: "91.8%", top: "10.4%" },
+		{ id: 8, label: "SUSPEND", descriptionFile: "suspend.tsx", image: "", left: "96.8%", top: "10.4%" },
+		{ id: 9, label: "SAVE", descriptionFile: "save.tsx", image: "", left: "81.5%", top: "17.3%" },
+		{ id: 10, label: "VOID", descriptionFile: "void.tsx", image: "", left: "86.6%", top: "17.3%" },
+		{ id: 11, label: "REFUND", descriptionFile: "refund.tsx", image: "", left: "91.8%", top: "17.3%" },
+		{ id: 12, label: "MONEY", descriptionFile: "money.tsx", image: "", left: "96.9%", top: "17.3%" },
+		{ id: 13, label: "RELOAD", descriptionFile: "reload.tsx", image: "", left: "81.4%", top: "24.3%" },
+		{ id: 14, label: "PAID OUT", descriptionFile: "paid_out.tsx", image: "", left: "86.6%", top: "24.3%" },
+		{ id: 15, label: "PROMO", descriptionFile: "promo.tsx", image: "", left: "91.7%", top: "24.3%" },
+		{ id: 16, label: "CHANGE PHONE", descriptionFile: "change_phone.tsx", image: "", left: "96.8%", top: "24.3%" },
+		{ id: 17, label: "DISCOUNT LEVEL", descriptionFile: "discount_level.tsx", image: "", left: "81.3%", top: "31.2%" },
+		{ id: 18, label: "DISCOUNT PERCENTAGE", descriptionFile: "discount_percentage.tsx", image: "", left: "86.6%", top: "31.2%" },
+		{ id: 19, label: "DISCOUNT AMOUNT", descriptionFile: "discount_amount.tsx", image: "", left: "91.7%", top: "31.3%" },
+		{ id: 20, label: "DISCOUNT REMOVE", descriptionFile: "discount_remove.tsx", image: "", left: "96.8%", top: "31.4%" },
+		{ id: 21, label: "COPY", descriptionFile: "copy.tsx", image: "", left: "81.4%", top: "38.2%" },
+		{ id: 22, label: "LAYER", descriptionFile: "layer.tsx", image: "", left: "86.6%", top: "38.2%" },
+		{ id: 23, label: "SALES MAN", descriptionFile: "sales_man.tsx", image: "", left: "96.8%", top: "38.1%" },
+		{ id: 24, label: "GIFT VOUCHAR SALE", descriptionFile: "gv_sale.tsx", image: "", left: "91.7%", top: "38.3%" },
+		{ id: 25, label: "NEW LOYALTY", descriptionFile: "new_loyalty.tsx", image: "", left: "81.4%", top: "45%" },
+		{ id: 26, label: "STAFF", descriptionFile: "staff.tsx", image: "", left: "86.6%", top: "45.1%" },
+		{ id: 27, label: "RECIVER ACCOUNT", descriptionFile: "recive_acc.tsx", image: "", left: "91.7%", top: "45.1%" },
+		{ id: 28, label: "MANUAL CARD PAYMENT", descriptionFile: "manual_card_payment.tsx", image: "", left: "96.9%", top: "45.1%" },
+		{ id: 29, label: "PLU", descriptionFile: "plu.tsx", image: "", left: "82.2%", top: "95.4%", variant: "adjust" },
+		{ id: 30, label: "RPLU", descriptionFile: "rplu.tsx", image: "", left: "89.2%", top: "95.4%", variant: "adjust" },
+		{ id: 31, label: "CASH", descriptionFile: "cash.tsx", image: "", left: "96.2%", top: "95.3%", variant: "adjust" },
+		{ id: 32, label: "CLEAR", descriptionFile: "clear.tsx", image: "", left: "89.2%", top: "87%", variant: "adjust" },
+		{ id: 33, label: "SUB TOTAL", descriptionFile: "sub_total.tsx", image: "", left: "96.2%", top: "87%", variant: "adjust" },
+		{ id: 34, label: "Loyalty", descriptionFile: "loyalty.tsx", image: "", left: "67.3%", top: "62.3%", variant: "rectangle" },
+		{ id: 35, label: "Outlet", descriptionFile: "outlet.tsx", image: "", left: "74.3%", top: "62.3%", variant: "rectangle" },
+		{ id: 36, label: "Customer Keypad", descriptionFile: "customer_keypad.tsx", image: "", left: "39.6%", top: "72%", variant: "circle" },
+		{ id: 37, label: "Change side", descriptionFile: "change_side.tsx", image: "", left: "46%", top: "72%", variant: "circle" },
+		{ id: 38, label: "Refresh ERP", descriptionFile: "refresh_system.tsx", image: "", left: "52.4%", top: "72%", variant: "circle" },
+		{ id: 39, label: "MASTER", descriptionFile: "master.tsx", image: "", left: "56.6%", top: "80.6%", variant: "rounded" },
+		{ id: 40, label: "AMEX", descriptionFile: "amex.tsx", image: "", left: "63%", top: "80.6%", variant: "rounded" },
+		{ id: 41, label: "VISA", descriptionFile: "visa.tsx", image: "", left: "69.1%", top: "80.6%", variant: "rounded" },
+		{ id: 42, label: "DEBIT", descriptionFile: "debit.tsx", image: "", left: "75.4%", top: "80.6%", variant: "rounded" },
+		{ id: 43, label: "GV REDEEM", descriptionFile: "gv_redeem.tsx", image: "", left: "56.6%", top: "87.6%", variant: "rounded" },
+		{ id: 44, label: "STAFF CREDIT", descriptionFile: "staff_credit.tsx", image: "", left: "63%", top: "87.6%", variant: "rounded" },
+		{ id: 45, label: "REDEEM", descriptionFile: "redeem.tsx", image: "", left: "69.2%", top: "87.6%", variant: "rounded" },
+		{ id: 46, label: "OGF MANUAL", descriptionFile: "ogf_manual.tsx", image: "", left: "75.5%", top: "87.6%", variant: "rounded" },
+		{ id: 47, label: "MINT PAY", descriptionFile: "mint_pay.tsx", image: "", left: "56.7%", top: "94.7%", variant: "rounded" },
+		{ id: 48, label: "THYAGA", descriptionFile: "thyaga.tsx", image: "", left: "63%", top: "94.6%", variant: "rounded" },
+		{ id: 49, label: "KOKO", descriptionFile: "koko.tsx", image: "", left: "69.2%", top: "94.6%", variant: "rounded" },
+		{ id: 50, label: "GV MANUEL", descriptionFile: "gv_manuel.tsx", image: "", left: "75.5%", top: "94.6%", variant: "rounded" },
 	];
 
 	return (
@@ -503,7 +129,7 @@ export default function FunctionalPage() {
 									setActiveHotspot({
 										id: 0,
 										label: section.title,
-										descriptionFile: "../../description/son.md",
+										descriptionFile: "son.tsx", // FIX: use .tsx filename, not .md path
 										image: section.image,
 										left: "50%",
 										top: "50%",
@@ -548,19 +174,23 @@ export default function FunctionalPage() {
 										description={hotspot.descriptionFile}
 										isGray={clickedHotspotId === hotspot.id}
 										variant={hotspot.variant}
-										onClick={async () => {
+										onClick={() => {
 											if (clickedHotspotId === hotspot.id) {
-												// If clicking the same hotspot, toggle description visibility
 												setShowDescription(!showDescription);
 											} else {
-												// If clicking a different hotspot, show its description
 												setActiveHotspot(hotspot);
 												setClickedHotspotId(hotspot.id);
-												// Fetch markdown content dynamically
-												const res = await fetch(hotspot.descriptionFile);
-												const text = await res.text();
-												setDescriptionContent(text);
-												setShowDescription(true);
+												setLoadingDescription(true);
+												import(`../description/${hotspot.descriptionFile}`)
+													.then((mod) => {
+														setDescriptionContent(mod.content || "No description found.");
+														setShowDescription(true);
+													})
+													.catch(() => {
+														setDescriptionContent("No description found.");
+														setShowDescription(true);
+													})
+													.finally(() => setLoadingDescription(false));
 											}
 										}}
 									/>
@@ -588,35 +218,39 @@ export default function FunctionalPage() {
 											</div>
 											<div className="overflow-x-auto overflow-y-auto w-full max-h-[40vh] px-2 mb-2">
 												<div className="markdown-body prose prose-invert" style={{ minWidth: 0, maxWidth: '100%' }}>
-													<ReactMarkdown
-														remarkPlugins={[remarkGfm]}
-														components={{
-															table: ({ children }) => (
-																<div className="table-wrapper overflow-x-auto my-4 border border-gray-700 rounded-lg">
-																	<table className="min-w-full divide-y divide-gray-700">
+													{loadingDescription ? (
+														<div className="text-green-300 text-center py-8">Loading...</div>
+													) : (
+														<ReactMarkdown
+															remarkPlugins={[remarkGfm]}
+															components={{
+																table: ({ children }) => (
+																	<div className="table-wrapper overflow-x-auto my-4 border border-gray-700 rounded-lg">
+																		<table className="min-w-full divide-y divide-gray-700">
+																			{children}
+																		</table>
+																	</div>
+																),
+																th: ({ children }) => (
+																	<th className="px-4 py-3 text-left text-sm font-semibold text-green-300 bg-gray-800 border-b border-gray-700">
 																		{children}
-																	</table>
-																</div>
-															),
-															th: ({ children }) => (
-																<th className="px-4 py-3 text-left text-sm font-semibold text-green-300 bg-gray-800 border-b border-gray-700">
-																	{children}
-																</th>
-															),
-															td: ({ children }) => (
-																<td className="px-4 py-3 text-sm text-gray-300 border-b border-gray-700">
-																	{children}
-																</td>
-															),
-															code: ({ children }) => (
-																<code className="px-1.5 py-0.5 rounded bg-gray-800 text-green-300 text-sm">
-																	{children}
-																</code>
-															)
-														}}
-													>
-														{descriptionContent}
-													</ReactMarkdown>
+																	</th>
+																),
+																td: ({ children }) => (
+																	<td className="px-4 py-3 text-sm text-gray-300 border-b border-gray-700">
+																		{children}
+																	</td>
+																),
+																code: ({ children }) => (
+																	<code className="px-1.5 py-0.5 rounded bg-gray-800 text-green-300 text-sm">
+																		{children}
+																	</code>
+																)
+															}}
+														>
+															{descriptionContent}
+														</ReactMarkdown>
+													)}
 												</div>
 											</div>
 										</motion.div>
