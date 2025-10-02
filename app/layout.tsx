@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "POS-GUIDE",
-  description: "POS System User Documentation",
+  title: "POS_GUIDE",
+  description: "Documentation for POS",
 };
 
 export default function RootLayout({
