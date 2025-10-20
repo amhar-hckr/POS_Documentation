@@ -79,7 +79,7 @@ npm install
 
 **Example Connection String:**
 ```
-mongodb+srv://amhar:Abc123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority
+mongodb+srv://username:password@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority
 ```
 
 ### 3. Environment Configuration
@@ -88,7 +88,7 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # MongoDB Atlas connection string
-MONGODB_URI=mongodb+srv://amhar:Abc123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://test:123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority
 ```
 
 ### 4. Local Development
