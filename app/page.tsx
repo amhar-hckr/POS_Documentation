@@ -22,6 +22,12 @@ export default function POSDocumentation() {
       description:
         "Step-by-step installation guide with environment configuration...",
     },
+    {
+      id: "reports",
+      title: "Configuration Reports",
+      description:
+        "View detailed reports of POS machine configurations, locations, and verification details...",
+    },
   ];
 
   return (
