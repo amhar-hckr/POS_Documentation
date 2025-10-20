@@ -143,7 +143,7 @@ npx vercel env add MONGODB_URI
 ```
 
 When prompted:
-- **Value**: `mongodb+srv://amhar:Abc123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority`
+- **Value**: `mongodb+srv://test:123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority`
 - **Environments**: Select `Production`, `Preview`, `Development`
 
 ### Step 5: Redeploy with Environment Variables
