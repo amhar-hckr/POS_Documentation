@@ -10,7 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 const locationOptions = [
   "HO", "ML", "NG", "MG", "DG", "HP", "KY", "7MP", "KG", 
   "NB 424", "NB 456", "BL", "DL", "RT", "RP", "WCP", 
-  "KEG", "YPM", "KCC", "PD", "WT", "OGF", "OGF KIDS", "CCC", "DEEDAT"
+  "KEG", "YPM", "KCC", "PD", "WT", "OGF", "TH", "CCC", "HCM",
+  "JF", "GBN", "GFD", "KB", "ON", "DON"
 ];
 
 const steps = [
