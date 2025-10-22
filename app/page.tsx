@@ -5,10 +5,18 @@ import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card"
 import { useRouter } from "next/navigation";
 import { DocumentationLayout } from "../components/layout/documentation-layout";
 import { useSession, signOut } from "next-auth/react";
+import { useEffect } from "react";
 
 export default function POSDocumentation() {
   const router = useRouter();
   const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === 'loading') return;
+    if (!session) {
+      router.push('/login');
+    }
+  }, [session, status, router]);
 
   if (status === 'loading') {
     return (
@@ -19,7 +27,6 @@ export default function POSDocumentation() {
   }
 
   if (!session) {
-    router.push('/login');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-white">Redirecting to login...</div>

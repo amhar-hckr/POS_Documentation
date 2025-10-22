@@ -14,8 +14,17 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        // Hardcoded admin credentials
-        if (credentials.username === 'admin' && credentials.password === 'Nlm@pos') {
+        // Admin credentials from environment variables
+        // This prevents sensitive credentials from being exposed in version control
+        const adminUsername = process.env.ADMIN_USERNAME;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+
+        if (
+          adminUsername &&
+          adminPassword &&
+          credentials.username === adminUsername &&
+          credentials.password === adminPassword
+        ) {
           return {
             id: 'admin',
             name: 'Administrator',
