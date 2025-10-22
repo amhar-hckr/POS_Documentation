@@ -81,7 +81,7 @@ const steps = [
       " in system variable create new for each of the following:",
       "`LocationID`",
       "`UnitNo`",
-      "`Server` (same as PC name, e.g., SPOS1)",
+      "`Server` ( e.g., SPOS1)",
       "`Key`"
     ],
   },
