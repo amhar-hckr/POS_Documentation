@@ -4,10 +4,28 @@ import { motion } from "framer-motion";
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/card";
 import { useRouter } from "next/navigation";
 import { DocumentationLayout } from "../components/layout/documentation-layout";
+import { useSession, signOut } from "next-auth/react";
 
 export default function POSDocumentation() {
   const router = useRouter();
+  const { data: session, status } = useSession();
 
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    router.push('/login');
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-white">Redirecting to login...</div>
+      </div>
+    );
+  }
 
   const sections = [
     {
@@ -33,6 +51,20 @@ export default function POSDocumentation() {
   return (
     <DocumentationLayout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header with user info and logout */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-white">Welcome, {session.user?.name}</h1>
+            <p className="text-gray-400">POS Documentation Dashboard</p>
+          </div>
+          <button
+            onClick={() => signOut()}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            Logout
+          </button>
+        </div>
+
         {/* Main content: Always show dashboard */}
         <main>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">

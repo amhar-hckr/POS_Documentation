@@ -15,7 +15,7 @@ const locationOptions = [
 ];
 
 const steps = [
-  { id: "os", title: "Install OS", details: ["Windows 10 LTSC"] },
+  { id: "os", title: "Install OS", details: ["Windows 11 LTSC"] },
   { id: "admin", title: "Enable Admin User", details: ["Set a secure password"] },
   { id: "cashier", title: "Create Cashier User", details: ["Set a password for cashier account"] },
   { id: "activation", title: "Activate Windows OS", details: ["Perform Windows Update"] },
@@ -31,13 +31,35 @@ const steps = [
       "WinRAR",
       "OPOS Printer Software",
       "POS for .NET 1.14",
-      "SQL Server Express (2019)",
+      "SQL Server Express (2022) - SELECT CUSTOM ==> new == accept    ",
       "SQL Server Management Studio (SSMS)",
+      "ANYDESK",
+      "Chrome Browser",
+      "Crystal Reports",
     ],
   },
+
   { id: "folders", title: "Create Folder Structure", details: ["`D:\\Sarasa\\Data`"] },
-  { id: "pipes", title: "Enable Named Pipes", details: ["Use SQL Server Configuration Manager"] },
-  { id: "openrowset", title: "Execute OPENROWSET Query", details: ["Login and run the required script"] },
+  { id: "pipes", title: "Enable Named Pipes ", 
+    details: [
+      "Search SQL",
+      "SQL Server Configuration Manager ==> run as administrator",
+      "in SQL Server Network Configuration, double click protocols for SQLEXPRESS",
+      "on the protocols name Enable",
+      "Named Pipes and TCP/IP for the SQL instance",
+    ] 
+  },
+
+
+  { id: "openrowset", title: "Execute OPENROWSET Query", 
+    details: [
+      "Methods to enable OPENROWSET:",
+      "1. Using SQL Server Management Studio (SSMS)",
+      "2. Using T-SQL",
+      "Login and run the required script",
+
+    ] 
+  },
   { id: "db", title: "Restore Relevant Database" },
   { id: "rename", title: "Rename Computer", details: ["Example: `SPOS1`"] },
   {
