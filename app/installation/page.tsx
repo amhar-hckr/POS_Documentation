@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Check, X, Menu, Copy } from "lucide-react";
 import { Inter } from "next/font/google";
 
@@ -30,6 +30,7 @@ const steps = [
   { id: "security", title: "Install Security Software", details: ["ESET Cloud with EDR"] },
   { id: "firewall", title: "Turn Off Firewall" },
   { id: "remote", title: "Enable Remote Access" },
+  
   {
     id: "software",
     title: "Install Required Software",
@@ -84,6 +85,7 @@ const steps = [
       "`Server` ( e.g., SPOS1)",
       "`Key`"
     ],
+
   },
 
   { id: "rename", title: "Rename Computer", details: ["Example: `SPOS1`"] },
@@ -136,6 +138,27 @@ export default function EnterpriseChecklistGuided() {
   const [purposeError, setPurposeError] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
 
+  // Keyboard navigation support
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Only handle keyboard events when not typing in inputs
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (event.key === 'Enter' && !showPreInstall && activeStep < steps.length) {
+        event.preventDefault();
+        handleSubStepDone();
+      } else if (event.key === 'Backspace' && !showPreInstall && activeStep < steps.length) {
+        event.preventDefault();
+        handleSubStepBack();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [activeStep, activeSubStep, showPreInstall]);
+
   const handleClose = () => router.push("/");
 
   const totalSubSteps = steps.reduce((acc, step) => acc + (step.details?.length || 1), 0);
@@ -147,11 +170,33 @@ export default function EnterpriseChecklistGuided() {
 
   const handleSubStepDone = () => {
     const stepDetailsLength = steps[activeStep].details?.length || 0;
+    
+    // Special handling for openrowset step - when clicking done on the instruction, advance to next step
+    if (steps[activeStep].id === 'openrowset' && activeSubStep === 2) { // Index 2 is "3. Copy and paste the script below and Execute:"
+      setActiveSubStep(0);
+      setActiveStep(activeStep + 1);
+      // Auto-scroll to next step
+      setTimeout(() => {
+        const nextStepElement = document.getElementById(steps[activeStep + 1]?.id);
+        if (nextStepElement) {
+          nextStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+      return;
+    }
+    
     if (activeSubStep + 1 < stepDetailsLength) {
       setActiveSubStep(activeSubStep + 1);
     } else {
       setActiveSubStep(0);
       setActiveStep(activeStep + 1);
+      // Auto-scroll to next step
+      setTimeout(() => {
+        const nextStepElement = document.getElementById(steps[activeStep + 1]?.id);
+        if (nextStepElement) {
+          nextStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
     }
   };
 
@@ -494,13 +539,18 @@ GO`;
                                       </div>
                                     )}
                                     {!done && !locked && (
-                                      <div className="flex space-x-2 ml-6">
-                                        <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
-                                          Done
-                                        </button>
-                                        <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
-                                          Back
-                                        </button>
+                                      <div className="flex flex-col space-y-1 ml-6">
+                                        <div className="flex space-x-2">
+                                          <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                                            Done
+                                          </button>
+                                          <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
+                                            Back
+                                          </button>
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                          Press <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Enter</kbd> for Done, <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Backspace</kbd> for Back
+                                        </div>
                                       </div>
                                     )}
                                   </li>
@@ -528,16 +578,21 @@ GO`;
                                     {done && <Check className="inline-block w-4 h-4 text-green-500 mr-1" />}
                                     {d}
                                   </span>
-                                  {!done && !locked && (
-                                    <div className="flex space-x-2">
-                                      <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
-                                        Done
-                                      </button>
-                                      <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
-                                        Back
-                                      </button>
-                                    </div>
-                                  )}
+                                    {!done && !locked && (
+                                      <div className="flex flex-col space-y-1 ml-6">
+                                        <div className="flex space-x-2">
+                                          <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                                            Done
+                                          </button>
+                                          <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
+                                            Back
+                                          </button>
+                                        </div>
+                                        <div className="text-xs text-gray-500">
+                                          Press <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Enter</kbd> for Done, <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Backspace</kbd> for Back
+                                        </div>
+                                      </div>
+                                    )}
                                 </li>
                               );
                             })}
