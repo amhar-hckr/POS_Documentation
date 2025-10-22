@@ -68,12 +68,7 @@ const steps = [
       "1. Using SQL Server Management Studio (SSMS)",
       "2. Select Database and new query",
       "3. Copy and paste the script below and Execute:",
-      "sp_configure 'show advanced options', 1;",
-      "RECONFIGURE;",
-      "GO",
-      "sp_configure 'Ad Hoc Distributed Queries', 1;",
-      "RECONFIGURE;",
-      "GO"
+      "sp_configure 'show advanced options', 1; RECONFIGURE; GO sp_configure 'Ad Hoc Distributed Queries', 1; RECONFIGURE; GO"
     ] 
   },
 
@@ -474,11 +469,11 @@ export default function EnterpriseChecklistGuided() {
                               // Special handling for SQL script section in openrowset step
                               if (step.id === 'openrowset' && d === "3. Copy and paste the script below and Execute:") {
                                 const sqlScript = `sp_configure 'show advanced options', 1;
-                                                   RECONFIGURE;
-                                                   GO
-                                                   sp_configure 'Ad Hoc Distributed Queries', 1;
-                                                   RECONFIGURE;
-                                                   GO`;
+RECONFIGURE;
+GO
+sp_configure 'Ad Hoc Distributed Queries', 1;
+RECONFIGURE;
+GO`;
 
                                 return (
                                   <li key={idx} className="flex flex-col space-y-2">
@@ -514,7 +509,7 @@ export default function EnterpriseChecklistGuided() {
 
                               // Skip individual SQL script lines in openrowset step - they don't need individual done buttons
                               const isSqlScript = step.id === 'openrowset' && 
-                                (d.includes('sp_configure') || d.includes('RECONFIGURE') || d.includes('GO'));
+                                d.includes("sp_configure 'show advanced options', 1; RECONFIGURE; GO sp_configure 'Ad Hoc Distributed Queries', 1; RECONFIGURE; GO");
 
                               if (isSqlScript) {
                                 return (
