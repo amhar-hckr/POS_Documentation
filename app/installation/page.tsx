@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Check, X, Menu } from "lucide-react";
+import { Check, X, Menu, Copy } from "lucide-react";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,7 +31,7 @@ const steps = [
       "WinRAR",
       "OPOS Printer Software",
       "POS for .NET 1.14",
-      "SQL Server Express (2022) - SELECT CUSTOM ==> new == accept    ",
+      "SQL Server Express (2022) - SELECT CUSTOM ",
       "SQL Server Management Studio (SSMS)",
       "ANYDESK",
       "Chrome Browser",
@@ -55,9 +55,14 @@ const steps = [
     details: [
       "Methods to enable OPENROWSET:",
       "1. Using SQL Server Management Studio (SSMS)",
-      "2. Using T-SQL",
-      "Login and run the required script",
-
+      "2. Select Database and new query",
+      "3. Copy and paste the script below:",
+      "sp_configure 'show advanced options', 1;",
+      "RECONFIGURE;",
+      "GO",
+      "sp_configure 'Ad Hoc Distributed Queries', 1;",
+      "RECONFIGURE;",
+      "GO",
     ] 
   },
   { id: "db", title: "Restore Relevant Database" },
@@ -101,6 +106,7 @@ export default function EnterpriseChecklistGuided() {
   const [verification, setVerification] = useState({ verifiedBy: '', confirmed: false, configuredBy: '', status: 'completed' as 'completed' | 'pending' });
   const [locationError, setLocationError] = useState(false);
   const [purposeError, setPurposeError] = useState(false);
+  const [copiedText, setCopiedText] = useState<string | null>(null);
 
   const handleClose = () => router.push("/");
 
@@ -128,6 +134,16 @@ export default function EnterpriseChecklistGuided() {
       const prevStepDetailsLength = steps[activeStep - 1].details?.length || 1;
       setActiveStep(activeStep - 1);
       setActiveSubStep(prevStepDetailsLength - 1);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedText(text);
+      setTimeout(() => setCopiedText(null), 2000); // Reset after 2 seconds
+    } catch (err) {
+      console.error('Failed to copy text: ', err);
     }
   };
 
@@ -421,6 +437,74 @@ export default function EnterpriseChecklistGuided() {
                             {(step.details || ["Complete this step"]).map((d, idx) => {
                               const locked = i > activeStep || (i === activeStep && idx > activeSubStep);
                               const done = i < activeStep || (i === activeStep && idx < activeSubStep);
+
+                              // Special handling for SQL script section in openrowset step
+                              if (step.id === 'openrowset' && d === "3. Copy and paste the script below:") {
+                                const sqlScript = `sp_configure 'show advanced options', 1;
+RECONFIGURE;
+GO
+sp_configure 'Ad Hoc Distributed Queries', 1;
+RECONFIGURE;
+GO`;
+
+                                return (
+                                  <li key={idx} className="flex flex-col space-y-2">
+                                    <span className={`${locked ? "text-gray-600" : "text-gray-300"}`}>
+                                      {done && <Check className="inline-block w-4 h-4 text-green-500 mr-1" />}
+                                      {d}
+                                    </span>
+                                    {!locked && (
+                                      <div className="ml-6 flex items-center space-x-2">
+                                        <button
+                                          onClick={() => copyToClipboard(sqlScript)}
+                                          className="flex items-center space-x-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-sm transition-colors"
+                                          title="Copy SQL script to clipboard"
+                                        >
+                                          <Copy className="w-4 h-4" />
+                                          <span>{copiedText === sqlScript ? 'Copied!' : 'Copy SQL Script'}</span>
+                                        </button>
+                                      </div>
+                                    )}
+                                    {!done && !locked && (
+                                      <div className="flex space-x-2 ml-6">
+                                        <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                                          Done
+                                        </button>
+                                        <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
+                                          Back
+                                        </button>
+                                      </div>
+                                    )}
+                                  </li>
+                                );
+                              }
+
+                              // Special handling for SQL script lines in openrowset step
+                              const isSqlScript = step.id === 'openrowset' && 
+                                (d.includes('sp_configure') || d.includes('RECONFIGURE') || d.includes('GO'));
+
+                              if (isSqlScript) {
+                                return (
+                                  <li key={idx} className="flex justify-between items-center">
+                                    <div className="flex items-center space-x-2">
+                                      <span className={`${locked ? "text-gray-600" : "text-gray-300"} font-mono text-sm bg-gray-800 px-2 py-1 rounded ml-6`}>
+                                        {done && <Check className="inline-block w-4 h-4 text-green-500 mr-1" />}
+                                        {d}
+                                      </span>
+                                    </div>
+                                    {!done && !locked && (
+                                      <div className="flex space-x-2">
+                                        <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                                          Done
+                                        </button>
+                                        <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
+                                          Back
+                                        </button>
+                                      </div>
+                                    )}
+                                  </li>
+                                );
+                              }
 
                               return (
                                 <li key={idx} className="flex justify-between items-center">
