@@ -5,6 +5,7 @@ A comprehensive POS (Point of Sale) machine installation and documentation syste
 
 ## 🚀 Features
 
+- **Secure Authentication**: Admin-only access with NextAuth.js
 - **Installation Checklist**: Guided 22-step POS installation process
 - **Verification Workflow**: Cross-check verification with configurable and verified by fields
 - **Database Backend**: MongoDB with Mongoose for persistent data storage
@@ -18,6 +19,7 @@ A comprehensive POS (Point of Sale) machine installation and documentation syste
 
 - **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes, MongoDB Atlas, Mongoose
+- **Authentication**: NextAuth.js with secure credentials
 - **Deployment**: Vercel (serverless)
 - **UI**: Lucide React icons, Custom dark theme, Framer Motion
 - **Content**: React Markdown, Interactive hotspots
@@ -88,8 +90,21 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # MongoDB Atlas connection string
-MONGODB_URI=mongodb+srv://test:123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/pos_documentation?retryWrites=true&w=majority
+
+# NextAuth.js Configuration
+NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production
+
+# Admin Credentials (secure these in production)
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-secure-admin-password
 ```
+
+**Required Environment Variables:**
+- `MONGODB_URI`: Your MongoDB Atlas connection string
+- `NEXTAUTH_SECRET`: Secure random string for JWT signing
+- `ADMIN_USERNAME`: Admin login username
+- `ADMIN_PASSWORD`: Admin login password
 
 ### 4. Local Development
 
@@ -137,14 +152,22 @@ npx vercel --prod
 
 ### Step 4: Configure Environment Variables in Vercel
 
+Set these environment variables in your Vercel dashboard:
+
 ```bash
-# Add MongoDB URI to Vercel environment
-npx vercel env add MONGODB_URI
+# Required for production
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/pos_documentation?retryWrites=true&w=majority
+NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production
+NEXTAUTH_URL=https://your-app.vercel.app
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your-secure-admin-password
 ```
 
-When prompted:
-- **Value**: `mongodb+srv://test:123+@amhar.mtyc7js.mongodb.net/pos_documentation?retryWrites=true&w=majority`
-- **Environments**: Select `Production`, `Preview`, `Development`
+**Environment Variables Setup:**
+1. Go to your Vercel project dashboard
+2. Navigate to **Settings** → **Environment Variables**
+3. Add each variable with **Production** scope
+4. Redeploy to apply changes
 
 ### Step 5: Redeploy with Environment Variables
 
@@ -213,6 +236,12 @@ Get list of unique users for filtering.
 **Response:** Array of user names
 
 ## 🎯 Usage
+
+### Authentication
+1. Navigate to the application URL
+2. Login with admin credentials:
+   - **Username**: `admin`
+   - **Password**: As configured in environment variables
 
 ### Installation Process
 1. Navigate to `/installation`
