@@ -30,7 +30,7 @@ const steps = [
   { id: "security", title: "Install Security Software", details: ["ESET Cloud with EDR"] },
   { id: "firewall", title: "Turn Off Firewall" },
   { id: "remote", title: "Enable Remote Access" },
-  
+
   {
     id: "software",
     title: "Install Required Software",
@@ -137,27 +137,37 @@ export default function EnterpriseChecklistGuided() {
   const [locationError, setLocationError] = useState(false);
   const [purposeError, setPurposeError] = useState(false);
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
 
   // Keyboard navigation support
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Only handle keyboard events when not typing in inputs
-      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLSelectElement || event.target instanceof HTMLTextAreaElement) {
+      // Only handle keyboard events when not typing in inputs and not in verification section
+      if (event.target instanceof HTMLInputElement || 
+          event.target instanceof HTMLSelectElement || 
+          event.target instanceof HTMLTextAreaElement ||
+          showPreInstall || 
+          activeStep >= steps.length ||
+          isNavigating) {
         return;
       }
 
-      if (event.key === 'Enter' && !showPreInstall && activeStep < steps.length) {
+      // Prevent default behavior for navigation keys
+      if (event.key === 'Enter' || event.key === 'Backspace') {
         event.preventDefault();
-        handleSubStepDone();
-      } else if (event.key === 'Backspace' && !showPreInstall && activeStep < steps.length) {
-        event.preventDefault();
-        handleSubStepBack();
+        event.stopPropagation();
+        
+        if (event.key === 'Enter') {
+          handleSubStepDone();
+        } else if (event.key === 'Backspace') {
+          handleSubStepBack();
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [activeStep, activeSubStep, showPreInstall]);
+  }, [activeStep, activeSubStep, showPreInstall, isNavigating]);
 
   const handleClose = () => router.push("/");
 
@@ -169,6 +179,9 @@ export default function EnterpriseChecklistGuided() {
   const progressPercent = activeStep >= steps.length ? 100 : Math.min(Math.round((completedSubSteps / totalSubSteps) * 100), 100);
 
   const handleSubStepDone = () => {
+    if (isNavigating) return; // Prevent double navigation
+    setIsNavigating(true);
+    
     const stepDetailsLength = steps[activeStep].details?.length || 0;
     
     // Special handling for openrowset step - when clicking done on the instruction, advance to next step
@@ -181,12 +194,14 @@ export default function EnterpriseChecklistGuided() {
         if (nextStepElement) {
           nextStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        setIsNavigating(false);
       }, 100);
       return;
     }
     
     if (activeSubStep + 1 < stepDetailsLength) {
       setActiveSubStep(activeSubStep + 1);
+      setIsNavigating(false);
     } else {
       setActiveSubStep(0);
       setActiveStep(activeStep + 1);
@@ -196,17 +211,32 @@ export default function EnterpriseChecklistGuided() {
         if (nextStepElement) {
           nextStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+        setIsNavigating(false);
       }, 100);
     }
   };
 
   const handleSubStepBack = () => {
+    if (isNavigating) return; // Prevent double navigation
+    setIsNavigating(true);
+    
     if (activeSubStep > 0) {
       setActiveSubStep(activeSubStep - 1);
+      setIsNavigating(false);
     } else if (activeStep > 0) {
       const prevStepDetailsLength = steps[activeStep - 1].details?.length || 1;
       setActiveStep(activeStep - 1);
       setActiveSubStep(prevStepDetailsLength - 1);
+      // Auto-scroll to previous step
+      setTimeout(() => {
+        const prevStepElement = document.getElementById(steps[activeStep - 1]?.id);
+        if (prevStepElement) {
+          prevStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        setIsNavigating(false);
+      }, 100);
+    } else {
+      setIsNavigating(false);
     }
   };
 
@@ -441,6 +471,7 @@ export default function EnterpriseChecklistGuided() {
                         )}
                         <div className="mt-6 flex space-x-4">
                           <button
+                            type="button"
                             onClick={async () => {
                               if (!verification.confirmed || !verification.verifiedBy || !verification.configuredBy) {
                                 alert('Please fill in all verification details and confirm the installation.');
@@ -484,6 +515,7 @@ export default function EnterpriseChecklistGuided() {
                             Submit & View Reports
                           </button>
                           <button
+                            type="button"
                             onClick={() => router.push('/reports')}
                             className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md font-medium transition"
                           >
@@ -497,7 +529,7 @@ export default function EnterpriseChecklistGuided() {
                   steps.map((step, i) => {
                     if (i > activeStep) return null;
                     return (
-                      <section key={step.id} id={step.id} className="border-b border-gray-700 pb-6">
+                      <section key={step.id} id={step.id} className={`border-b border-gray-700 pb-6 ${i === activeStep ? 'bg-gray-900/50 rounded-lg p-4 -mx-4' : ''}`}>
                         <div className="flex flex-col">
                           <div className="flex items-center mb-2">
                             <div className={`flex-shrink-0 w-10 h-10 flex items-center justify-center font-semibold rounded-full mr-4 ${i < activeStep ? "bg-green-500 text-black" : "bg-blue-600 text-white"}`}>
@@ -539,12 +571,24 @@ GO`;
                                       </div>
                                     )}
                                     {!done && !locked && (
-                                      <div className="flex flex-col space-y-1 ml-6">
+                                      <div className="flex flex-col space-y-1">
                                         <div className="flex space-x-2">
-                                          <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
+                                          <button 
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              handleSubStepDone();
+                                            }} 
+                                            className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                          >
                                             Done
                                           </button>
-                                          <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
+                                          <button 
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              handleSubStepBack();
+                                            }} 
+                                            className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                          >
                                             Back
                                           </button>
                                         </div>
@@ -578,21 +622,33 @@ GO`;
                                     {done && <Check className="inline-block w-4 h-4 text-green-500 mr-1" />}
                                     {d}
                                   </span>
-                                    {!done && !locked && (
-                                      <div className="flex flex-col space-y-1 ml-6">
-                                        <div className="flex space-x-2">
-                                          <button onClick={handleSubStepDone} className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm">
-                                            Done
-                                          </button>
-                                          <button onClick={handleSubStepBack} className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm">
-                                            Back
-                                          </button>
-                                        </div>
-                                        <div className="text-xs text-gray-500">
-                                          Press <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Enter</kbd> for Done, <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Backspace</kbd> for Back
-                                        </div>
+                                  {!done && !locked && (
+                                    <div className="flex flex-col space-y-1">
+                                      <div className="flex space-x-2">
+                                        <button 
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            handleSubStepDone();
+                                          }} 
+                                          className="px-2 py-1 bg-blue-600 hover:bg-blue-700 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                          Done
+                                        </button>
+                                        <button 
+                                          onClick={(e) => {
+                                            e.preventDefault();
+                                            handleSubStepBack();
+                                          }} 
+                                          className="px-2 py-1 bg-gray-700 hover:bg-gray-800 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                        >
+                                          Back
+                                        </button>
                                       </div>
-                                    )}
+                                      <div className="text-xs text-gray-500">
+                                        Press <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Enter</kbd> for Done, <kbd className="px-1 py-0.5 bg-gray-700 rounded text-xs">Backspace</kbd> for Back
+                                      </div>
+                                    </div>
+                                  )}
                                 </li>
                               );
                             })}
