@@ -15,29 +15,26 @@ const locationOptions = [
 ];
 
 const steps = [
-  { id: "os", title: "Install OS", details: ["Windows 11 LTSC"] },
-  { id: "admin", title: "Enable Admin User", details: ["Set a secure password"] },
-  { id: "cashier", title: "Create Cashier User", details: ["Set a password for cashier account"] },
-  
-  { id: "activation", title: "Activate Windows OS",
+  { id: "os", title: "1 Install OS", details: ["Windows 11 LTSC"] },
+  { id: "login", title: "2 Temporary User", details: ["IT"] },
+  { id: "copy", title: "3 Copy  Pos Software", details: ["Copy '\\\\nlm\\apps\\Basic Softwares\\POS' to `D:\\` drive"] },
+
+  { id: "Batch File", title: "To Complete STEPS 4,5,6,7,8,9,10",
     details: [
-      "run the activate LTSC.bat to activate the windows ltsc",
-      "Perform Windows Update"
+      "Run The Bat File on (4,5,6,7,8,9,10 BatchScripts_Dlt\\SetupSystemAndUsers_Dlt\\RUN_FullSystemSetup.bat)",
     ] 
   },
 
-  { id: "copy", title: "Copy Software", details: ["Copy '\\\\nlm\\apps\\Basic Softwares\\POS' to `D:\\` drive"] },
-  { id: "security", title: "Install Security Software", details: ["ESET Cloud with EDR"] },
-  { id: "firewall", title: "Turn Off Firewall" },
-  { id: "remote", title: "Enable Remote Access" },
+  { id: "Activation", title: "11 Windows 11 LTSC", details: ["run the bat file (11 Activate Windows_Dlt\\activate LTSC_Dlt)"] },
+  { id: "firewall", title: "12 Turn Off Firewall" },
 
   {
-    id: "software",
-    title: "Install Required Software",
+    id: "software installation",
+    title: "13 Pos Basic Softwares//",
     details: [
       "VNC",
       "WinRAR",
-      "OPOS Printer Software",
+      "New OPOS Driver",
       "POS for .NET 1.14",
       "SQL Server Express (2022) - SELECT CUSTOM ",
       "SQL Server Management Studio (SSMS)",
@@ -45,25 +42,22 @@ const steps = [
       "Chrome Browser",
       "Crystal Reports",
       "install the drivers of EDC machines (Aiken, Pax)",
-      "path = D:\\Pos Basic Softwares\\Drivers\\Credit Card Machine drivers"
+      "Nolimit CurrentSale",
+      "INSTALL SARASA POS SOFTWARE (PATH: D:\\Sarasa\\3.3.6)"
     ],
   },
 
-  { id: "folders", title: "Create Folder Structure", details: ["`D:\\Sarasa\\Data`"] },
+  { id: "folders", title: "14 Create Folder Structure", details: ["`D:\\Sarasa\\Data`"] },
   
   { 
-    id: "pipes", title: "Enable Named Pipes ", 
+    id: "Pipes-RDP-services", title: " 15, 16, 17 Enable Named Pipes & Remote Desktop & Services (SaraPOSCurrentSale & SQL Server)", 
     details: [
-      "Search SQL",
-      "SQL Server Configuration Manager ==> run as administrator",
-      "in SQL Server Network Configuration, double click protocols for SQLEXPRESS",
-      "on the protocols name Enable",
-      "Named Pipes and TCP/IP for the SQL instance"
+      "Run the Batch file (\\15,16,17 ENABLE_SERVICE-Pipes-RDP_Dlt\\ENABLE_SERVICE-Pipes-RDP_Dlt) ",
     ] 
   },
 
   { 
-    id: "openrowset", title: "Execute OPENROWSET Query", 
+    id: "openrowset", title: "18 Execute OPENROWSET Query", 
     details: [
       "Methods to enable OPENROWSET:",
       "1. Using SQL Server Management Studio (SSMS)",
@@ -73,57 +67,35 @@ const steps = [
     ] 
   },
 
-  { id: "db", title: "Restore Relevant Database", details: ["Restore the database from backup"] },
-  
-  {
-    id: "variables",
-    title: "Create Environment Variables",
-    details: [
-      " in system variable create new for each of the following:",
-      "`LocationID`",
-      "`UnitNo`",
-      "`Server` ( e.g., SPOS1)",
-      "`Key`"
-    ],
-
-  },
-
-  { id: "rename", title: "Rename Computer", details: ["Example: `SPOS1`"] },
-
-  {
-    id: "service",
-    title: "Install Current Sale Service",
-    details: ["Startup Type: Automatic", "Recovery: Restart the service"],
-  },
-
-  { id: "sarasa", title: "Install Sarasa POS Software" },
+  { id: "db", title: " 19 Restore Relevant Database", details: ["Restore the database from backup"] },
   
   {
     id: "permissions",
-    title: "Set Folder Permissions",
+    title: "20 Set Folder Permissions",
     details: [
-      "`C:\\Program Files(x86)\\Sarasa Soft Solution` for cashier user",
-      "`C:\\Program Files(x86)\\Sarasa SoftSolution` for cashier user",
-      "`D:\\` drive for cashier user"
+      "Run The Batch File on (\\20 GiveAccessToCashier_Dlt\GiveAccessToCashier_Dlt) ",
     ],
   },
-
-
-  { id: "auto-login", title: "Enable Auto Login", 
+  { id: "TimeZone-DateFormat", title: "21 DateFormat and Time Zone", 
     details: [
-      "Run the  batch file from from D:\\Autologin.bat"
+      "Run The Batch file on (\\21 Set_DateFormat&Region_Dlt\\Set_DateFormat&Region_Dlt)",
     ] 
   },
 
+  { id: "Internet Time", title: "22 Set A Internet Time ", details: ["in Control panel ==> clock and region ==> Date and Time ==> internet time to 10.10.100.23"] },
+  
+  { id: "fileExplorer", title: "23 Configure File Explorer Privacy", details: ["GO TO FILE EXPLORER - OPTIONS – DISABLE ALL IN PRIVACY – CLEAR – APPLY – OK"] },
+  
+  { id: "startSettings", title: "24 Disable Start Settings", details: ["SEARCH START SETTINGS AND DISABLE ALL"] },
+  
+  { id: "customerDisplay", title: "25 Setup Customer Display", details: ["IF THERE IS A CUSTOMER DISPLAY EXTEND THE MONITOR (WINDOWS + P)"] },
+  
+  { id: "tabletSettings", title: "26 Configure Tablet Settings", details: ["CONTROL PANEL – CATEGORY – SMALL ICONS – TABLET SETTINGS - SETUP"] },
+  
+  { id: "staticIP", title: "27 Set Static IP Address", details: ["SET IP ADDRESS (STATIC IP FOR RELEVANT SHOWROOM)"] },
+  
+  { id: "virusGuard", title: "28 Install Virus Guard", details: ["INSTALL VIRUS GUARD (ESET CLOUD WITH EDR)"] },
 
-  { id: "sleep", title: "Disable Sleep Mode", 
-    details: [
-      "Run the batch file D:\\sleep_hibernate.bat"
-    ] 
-  },
-
-
-  { id: "ip", title: "Assign Static IP", details: ["Configure static IP for the relevant showroom"] },
 ];
 
 export default function EnterpriseChecklistGuided() {
