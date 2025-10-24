@@ -21,7 +21,7 @@ const steps = [
 
   { id: "Batch File", title: "To Complete STEPS 4,5,6,7,8,9,10",
     details: [
-      "Run The Bat File on (4,5,6,7,8,9,10 BatchScripts_Dlt\\SetupSystemAndUsers_Dlt\\RUN_FullSystemSetup.bat)",
+     "Run The Bat File on (4,5,6,7,8,9,10 BatchScripts_Dlt\SetupSystemAndUsers_Dlt\RUN_FullSystemSetup.bat)",
     ] 
   },
 
@@ -30,7 +30,7 @@ const steps = [
 
   {
     id: "software installation",
-    title: "13 Pos Basic Softwares//",
+    title: "13 Pos Basic Softwares",
     details: [
       "VNC",
       "WinRAR",
@@ -52,7 +52,7 @@ const steps = [
   { 
     id: "Pipes-RDP-services", title: " 15, 16, 17 Enable Named Pipes & Remote Desktop & Services (SaraPOSCurrentSale & SQL Server)", 
     details: [
-      "Run the Batch file (\\15,16,17 ENABLE_SERVICE-Pipes-RDP_Dlt\\ENABLE_SERVICE-Pipes-RDP_Dlt) ",
+      "Run the Bat file (15,16,17 ENABLE_SERVICE-Pipes-RDP_Dlt\ENABLE_SERVICE-Pipes-RDP_Dlt) ",
     ] 
   },
 
@@ -73,12 +73,12 @@ const steps = [
     id: "permissions",
     title: "20 Set Folder Permissions",
     details: [
-      "Run The Batch File on (\\20 GiveAccessToCashier_Dlt\GiveAccessToCashier_Dlt) ",
+      "Run The Bat File on (20 GiveAccessToCashier_Dlt\GiveAccessToCashier_Dlt) ",
     ],
   },
   { id: "TimeZone-DateFormat", title: "21 DateFormat and Time Zone", 
     details: [
-      "Run The Batch file on (\\21 Set_DateFormat&Region_Dlt\\Set_DateFormat&Region_Dlt)",
+      "Run The Bat file on (21 Set_DateFormat&Region_Dlt\Set_DateFormat&Region_Dlt)",
     ] 
   },
 
@@ -359,21 +359,11 @@ export default function EnterpriseChecklistGuided() {
               <h2 className="text-xs font-semibold text-gray-400 mb-4 uppercase">Steps</h2>
               <nav className="space-y-2 text-sm">
                 {steps.map((step, i) => (
-                  <div key={step.id} className="flex flex-col">
+                  <div key={step.id}>
                     <a href={`#${step.id}`} className={`flex items-center px-2 py-1 rounded-md transition ${activeStep === i && activeStep < steps.length ? "bg-blue-700 text-white font-medium" : "text-gray-400 hover:bg-gray-800"}`}>
                       <span className="mr-2">{i < activeStep || activeStep >= steps.length ? <Check className="text-green-500 w-4 h-4" /> : i + 1}</span>
-                      {step.title}
+                      {step.id}
                     </a>
-                    {step.details?.map((d, idx) => {
-                      const locked = i > activeStep || (i === activeStep && idx > activeSubStep);
-                      const done = i < activeStep || (i === activeStep && idx < activeSubStep) || activeStep >= steps.length;
-                      return (
-                        <span key={idx} className={`ml-6 block px-2 py-1 text-sm rounded-md transition ${locked && activeStep < steps.length ? "text-gray-600" : "text-gray-300 hover:bg-gray-800"}`}>
-                          {done && <Check className="inline-block w-4 h-4 text-green-500 mr-1" />}
-                          {d}
-                        </span>
-                      );
-                    })}
                   </div>
                 ))}
               </nav>
